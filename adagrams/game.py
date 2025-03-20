@@ -81,23 +81,23 @@ def get_highest_word_score(word_list: list) -> tuple[str, int]:
             winning_score = points
             winning_word = word_item
         elif points == winning_score:
-            # add the earlier value to ties list first to preserve index order
+            # add the earlier value to ties list first to preserve word order from word_list in ties list
             ties.append(winning_word)
             ties.append(word_item)
 
     #use tiebreaker func if there are ties
     if len(ties) > 0:
-        winning_word = tiebreaker(ties, word_list)
+        winning_word = tiebreaker(ties)
         winning_score = score_tracker[winning_word]
     
     return (winning_word, winning_score)
 
 
-def tiebreaker(list_of_tied_words: list[str], word_list:list[str]) -> str:
+def tiebreaker(tied_list: list[str]) -> str:
     shortest_len_word = None
 
-    for tied_words in list_of_tied_words:
-        shortest_len_word = list_of_tied_words[0]
+    for tied_words in tied_list:
+        shortest_len_word = tied_list[0]
         #even if there are multiples w length of 10, the first in the list will be the winner
         if len(tied_words) == 10:
             winner = tied_words
@@ -108,8 +108,7 @@ def tiebreaker(list_of_tied_words: list[str], word_list:list[str]) -> str:
                 winner = shortest_len_word
                 break
             if len(tied_words) == len(shortest_len_word): 
-                # if list_of_tied_words.index(tied_words) < list_of_tied_words.index(shortest_len_word):
-                if word_list.index(tied_words) < word_list.index(shortest_len_word):
+                if tied_list.index(tied_words) < tied_list.index(shortest_len_word):
                     winner = tied_words
                 else:
                     winner = shortest_len_word
