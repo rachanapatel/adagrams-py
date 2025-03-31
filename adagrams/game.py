@@ -1,12 +1,12 @@
 from random import randint
 
-letter_dist: list[dict] = [{"A":9}, {"B":2}, {"C": 2}, {"D": 4}, {"E": 12}, {"F": 2}, 
+letter_dist = [{"A":9}, {"B":2}, {"C": 2}, {"D": 4}, {"E": 12}, {"F": 2}, 
                {"G": 3}, {"H": 2}, {"I" : 9}, {"J": 1}, {"K": 1}, {"L": 4},
                {"M": 2}, {"N": 6}, {"O": 8}, {"P": 2}, {"Q": 1}, {"R": 6}, 
                {"S": 4}, {"T": 6}, {"U": 4}, {"V": 2}, {"W": 2}, {"X": 1}, 
                {"Y": 2}, {"Z": 1}]
 
-score_chart: dict[tuple, int] = {
+score_chart = {
     ("A", "E", "I", "O", "U", "L", "N", "R", "S", "T"): 1,
     ("D", "G") :2,
     ("B", "C", "M", "P"): 3,
@@ -17,25 +17,31 @@ score_chart: dict[tuple, int] = {
 }
 
 
-def draw_letters() -> list:
+def draw_letters():
     #use dictionary generated_dict to keep track of the frequency of each letter
     generated_dict = {}
     #use randint to access a random dictionary in list letter_dist
-    while len(generated_dict.keys()) < 10:
+    count = 0
+    while count < 10:
         char_max_dict = letter_dist[randint(0, len(letter_dist)-1)]
         for char, max_allowed in char_max_dict.items():
-            if char not in generated_dict.keys():
-                random_letter = char
-                generated_dict[random_letter] = 1
+            if char not in generated_dict:
+                # random_letter = char
+                generated_dict[char] = 1
+                count += 1
             else:
-                if max_allowed > generated_dict[random_letter]:
-                    generated_dict[random_letter] += 1
+                # if max_allowed == generated_dict[char]:
+                #     continue
+                if max_allowed > generated_dict[char]:
+                    generated_dict[char] += 1
+                    count += 1
+    generated_hand = [k for k, v in generated_dict.items() for _ in range(v)]
 
-    return generated_dict.keys()
+    return generated_hand
 
 
 
-def uses_available_letters(word: str, letter_bank:list) -> bool:
+def uses_available_letters(word, letter_bank):
     word = word.upper()
     word_list = []
 
@@ -52,7 +58,7 @@ def uses_available_letters(word: str, letter_bank:list) -> bool:
     return True
  
 
-def score_word(word: str) -> int:
+def score_word(word):
     word = word.upper()
     total_score = 0
     if len(word) > 6:
@@ -65,15 +71,15 @@ def score_word(word: str) -> int:
     return total_score
 
 
-def get_highest_word_score(word_list: list) -> tuple[str, int]:
-    score_tracker: dict[str, int] = {} 
+def get_highest_word_score(word_list):
+    score_tracker = {} 
     for given_word in word_list:
         score_for_item = score_word(given_word)
         score_tracker[given_word] = score_for_item
     
     winning_score = -1
     winning_word = ""
-    ties: list[str] = []
+    ties = []
 
 # get highest value or add values to ties list
     for word_item, points in score_tracker.items():
@@ -93,30 +99,32 @@ def get_highest_word_score(word_list: list) -> tuple[str, int]:
     return (winning_word, winning_score)
 
 
-def tiebreaker(tied_list: list[str]) -> str:
-    shortest_len_word = None
+def tiebreaker(tied_list):
+    # shortest_len_word = None
+    shortest_word = tied_list[0]
 
     for tied_words in tied_list:
-        shortest_len_word = tied_list[0]
+        # shortest_word = None
+        
         #even if there are multiples w length of 10, the first in the list will be the winner
         if len(tied_words) == 10:
             winner = tied_words
             break
         else:
-            if len(tied_words) < len(shortest_len_word):
-                shortest_len_word = tied_words
-                winner = shortest_len_word
-                break
-            if len(tied_words) == len(shortest_len_word): 
-                if tied_list.index(tied_words) < tied_list.index(shortest_len_word):
+            if len(tied_words) < len(shortest_word):
+                shortest_word = tied_words
+                winner = shortest_word
+                # break
+            if len(tied_words) == len(shortest_word): 
+                if tied_list.index(tied_words) < tied_list.index(shortest_word):
                     winner = tied_words
                 else:
-                    winner = shortest_len_word
+                    winner = shortest_word
     return winner   
 
 
 
-def create_letter_freq_dict(letter_bank: list[str])  -> dict[str, int]:
+def create_letter_freq_dict(letter_bank):
     letter_count = {}
     #store the letters in given list as a dictionary w frequency
     for elem in letter_bank:
