@@ -26,12 +26,9 @@ def draw_letters():
         char_max_dict = letter_dist[randint(0, len(letter_dist)-1)]
         for char, max_allowed in char_max_dict.items():
             if char not in generated_dict:
-                # random_letter = char
                 generated_dict[char] = 1
                 count += 1
             else:
-                # if max_allowed == generated_dict[char]:
-                #     continue
                 if max_allowed > generated_dict[char]:
                     generated_dict[char] += 1
                     count += 1
@@ -86,6 +83,8 @@ def get_highest_word_score(word_list):
         if points > winning_score:
             winning_score = points
             winning_word = word_item
+            if len(ties) > 0:
+                ties.clear
         elif points == winning_score:
             # add the earlier value to ties list first to preserve word order from word_list in ties list
             ties.append(winning_word)
@@ -94,7 +93,7 @@ def get_highest_word_score(word_list):
     #use tiebreaker func if there are ties
     if len(ties) > 0:
         winning_word = tiebreaker(ties)
-        winning_score = score_tracker[winning_word]
+        # winning_score = score_tracker[winning_word]
     
     return (winning_word, winning_score)
 
