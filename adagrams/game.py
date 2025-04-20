@@ -80,21 +80,25 @@ def get_highest_word_score(word_list):
 
 # get highest value or add values to ties list
     for word_item, points in score_tracker.items():
+
         if points > winning_score:
             winning_score = points
             winning_word = word_item
+            
             if len(ties) > 0:
-                ties.clear
+                ties.clear()
+
         elif points == winning_score:
             # add the earlier value to ties list first to preserve word order from word_list in ties list
             ties.append(winning_word)
             ties.append(word_item)
 
+
     #use tiebreaker func if there are ties
     if len(ties) > 0:
         winning_word = tiebreaker(ties)
         # winning_score = score_tracker[winning_word]
-    
+
     return (winning_word, winning_score)
 
 
